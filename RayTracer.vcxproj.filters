@@ -27,6 +27,9 @@
     <ClCompile Include="Vector3.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Ray.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="utils.h">
@@ -36,6 +39,9 @@
       <Filter>源文件</Filter>
     </ClInclude>
     <ClInclude Include="Vector3.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Ray.h">
       <Filter>源文件</Filter>
     </ClInclude>
   </ItemGroup>

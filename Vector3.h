@@ -19,6 +19,7 @@ public:
 		z = v.z;
 	}
 	Vector3 operator*(const Vector3& v)const;//component wise
+	Vector3 operator+(const Vector3& v)const;
 	void operator*=(float scale);
 	Vector3 operator/(float scale)const;
 	void operator/=(float scale);
