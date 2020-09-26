@@ -20,6 +20,7 @@ public:
 	}
 	Vector3 operator*(const Vector3& v)const;//component wise
 	Vector3 operator+(const Vector3& v)const;
+	Vector3 operator-(const Vector3& v)const;
 	void operator*=(float scale);
 	Vector3 operator/(float scale)const;
 	void operator/=(float scale);
@@ -30,3 +31,4 @@ public:
 };
 Vector3 operator*(float f, const Vector3& v);
 float Dot(const Vector3& l, const Vector3& r);
+Vector3 Cross(const Vector3& l, const Vector3& r);

@@ -6,6 +6,9 @@ Vector3 Vector3::operator*(const Vector3& v)const {
 Vector3 Vector3::operator+(const Vector3& v)const {
 	return Vector3(x + v.x, y + v.y, z + v.z);
 }
+Vector3 Vector3::operator-(const Vector3& v)const {
+	return Vector3(x - v.x, y - v.y, z - v.z);
+}
 void Vector3::operator*=(float scale) {
 	x *= scale;
 	y *= scale;
@@ -38,4 +41,7 @@ Vector3 operator*(float f, const Vector3& v) {
 }
 float Dot(const Vector3& l, const Vector3& r) {
 	return l.x * r.x + l.y * r.y + l.z * r.z;
+}
+Vector3 Cross(const Vector3& l, const Vector3& r) {
+	return Vector3(l.y*r.z-l.z*r.y,l.z*r.x-l.x*r.z,l.x*r.y-l.y*r.x);
 }
