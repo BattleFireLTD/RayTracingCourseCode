@@ -8,6 +8,6 @@ void Ray::Set(const Vector3& origin, const Vector3& direction, const Vector3& at
 	mDirection.Normalize();
 	mLightAttenuation = attenuation;
 }
-Vector3 Ray::PointAt(float k) {
+Vector3 Ray::PointAt(float k) const {
 	return mOrigin + k * mDirection;
 }

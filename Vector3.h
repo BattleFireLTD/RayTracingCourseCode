@@ -32,3 +32,15 @@ public:
 Vector3 operator*(float f, const Vector3& v);
 float Dot(const Vector3& l, const Vector3& r);
 Vector3 Cross(const Vector3& l, const Vector3& r);
+class Material;
+struct HitPoint {
+	Vector3 mPosition;
+	Vector3 mNormal;
+	float mDistance;
+	Material* mMaterial;
+};
+class Ray;
+class Geometry {
+public:
+	virtual bool HitTest(const Ray& input_ray, float min_distance, float max_distance,HitPoint&hit_point) = 0;
+};

@@ -24,7 +24,7 @@ void Camera::LookAt(const Vector3& position, const Vector3& center, const Vector
 	mUVector = right_direction;
 	mVVector = up_direction;
 	mUSpanVector = mNearPlaneWidth * mUVector;
-	mVSpanVector = mNearPlaneHeight * mUVector;
+	mVSpanVector = mNearPlaneHeight * mVVector;
 	mCenter = center;
 	mPosition = position;
 	mUp = up;
