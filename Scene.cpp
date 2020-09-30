@@ -7,16 +7,13 @@
 #pragma comment(lib,"winmm.lib")
 static int sTotalPixelCount = 0;
 static int sViewportWidth = 0, sViewportHeight = 0;
+static Camera* sCamera = nullptr;
 void Init(int width, int height) {
 	sTotalPixelCount = width * height;
 	sViewportWidth = width;
 	sViewportHeight = height;
-	Vector3 v(1.0f,1.0f,0.0f);
-	v.Normalize();
-	Vector3 v2 = v;
-	Camera camera(45.0f,float(width)/float(height));
-	camera.LookAt(Vector3(0.0f,0.0f,1.0f),Vector3(0.0f,0.0f,0.0f),Vector3(0.0f,1.0f,0.0f));
-	Ray ray = camera.GetRay(0.5f, 0.5f);
+	sCamera=new Camera(45.0f,float(width)/float(height));
+	sCamera->LookAt(Vector3(0.0f,0.0f,1.0f),Vector3(0.0f,0.0f,0.0f),Vector3(0.0f,1.0f,0.0f));
 }
 float GetEscaptedTime() {
 	static unsigned long sTimeSinceComputerStart = 0;
@@ -29,7 +26,16 @@ float GetEscaptedTime() {
 void RenderOnePixel(int pixel_index) {
 	int x = pixel_index % sViewportWidth;
 	int y = pixel_index / sViewportWidth;
-	SetColor(x, y, 255, 0, 255, 255);
+	float u = float(x) / sViewportWidth;
+	float v = float(y) / sViewportHeight;
+	Ray ray = sCamera->GetRay(u, v);
+	float rf = ray.mDirection.x > 0.0f ? ray.mDirection.x : -ray.mDirection.x;
+	float gf = ray.mDirection.y > 0.0f ? ray.mDirection.y : -ray.mDirection.y;
+	float bf = ray.mDirection.z > 0.0f ? ray.mDirection.z : -ray.mDirection.z;
+	AByte r = AByte(rf * 255.0f);
+	AByte g = AByte(gf * 255.0f);
+	AByte b = AByte(bf * 255.0f);
+	SetColor(x, y, r, g, b, 255);
 }
 void Render() {
 	static int sCurrentRenderedPixel = 0;
@@ -38,7 +44,7 @@ void Render() {
 		RenderOnePixel(sCurrentRenderedPixel);
 		sCurrentRenderedPixel++;
 		current_render_time += GetEscaptedTime();
-		if (true || current_render_time > 0.0001f) {
+		if (current_render_time > 0.016f) {
 			break;
 		}
 	}
