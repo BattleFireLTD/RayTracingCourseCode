@@ -14,6 +14,7 @@ static Camera* sCamera = nullptr;
 Sphere sphere(Vector3(0.0f,0.0f,-5.0f),0.5f);
 static Object* sRootObject = nullptr;
 static Material* lambert = nullptr;
+static int sSampleCount = 1;
 void AddObject(Object* object) {
 	if (sRootObject == nullptr) {
 		sRootObject = object;
@@ -58,10 +59,17 @@ Vector3 GetColor(Ray& input_ray) {
 void RenderOnePixel(int pixel_index) {
 	int x = pixel_index % sViewportWidth;
 	int y = pixel_index / sViewportWidth;
-	float u = float(x) / sViewportWidth;
-	float v = float(y) / sViewportHeight;
-	Ray ray = sCamera->GetRay(u, v); 
-	Vector3 color = GetColor(ray);
+	Vector3 color;
+	for (int i = 0; i < sSampleCount; ++i) {
+		float offset_u = srandf() * 0.5f;
+		float offset_v = srandf() * 0.5f;
+		float u = (float(x) + offset_u) / sViewportWidth;//0.0~1.0
+		float v = (float(y) + offset_v) / sViewportHeight;//0.0~1.0
+		Ray ray = sCamera->GetRay(u, v);
+		Vector3 current_color = GetColor(ray);
+		color = color + current_color;
+	}
+	color /= float(sSampleCount);
 	AByte r = AByte(color.x * 255.0f); 
 	AByte g = AByte(color.y * 255.0f); 
 	AByte b = AByte(color.z * 255.0f); 
