@@ -14,3 +14,5 @@ struct RenderableBuffer {
 void InitRenderableBuffer(HDC dc, int width, int height);
 void SetColor(int x,int y,AByte r, AByte g, AByte b, AByte a);
 void ASwapBuffers(HDC dc);
+float randf();//0.0~1.0
+float srandf();//-1.0~1.0

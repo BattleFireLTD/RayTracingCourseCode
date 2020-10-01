@@ -1,5 +1,6 @@
 #include"Vector3.h"
 #include<math.h>
+#include"utils.h"
 Vector3 Vector3::operator*(const Vector3& v)const {
 	return Vector3(x*v.x,y*v.y,z*v.z);
 }
@@ -44,4 +45,9 @@ float Dot(const Vector3& l, const Vector3& r) {
 }
 Vector3 Cross(const Vector3& l, const Vector3& r) {
 	return Vector3(l.y*r.z-l.z*r.y,l.z*r.x-l.x*r.z,l.x*r.y-l.y*r.x);
+}
+Vector3 UnitRandomVector3InSphere() {
+	Vector3 random_vector(srandf(),srandf(),srandf());
+	random_vector.Normalize();
+	return random_vector;
 }

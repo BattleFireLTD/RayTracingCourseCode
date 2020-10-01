@@ -44,3 +44,4 @@ class Geometry {
 public:
 	virtual bool HitTest(const Ray& input_ray, float min_distance, float max_distance,HitPoint&hit_point) = 0;
 };
+Vector3 UnitRandomVector3InSphere();

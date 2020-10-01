@@ -1,4 +1,5 @@
 #include"utils.h"
+#include<functional>
 static RenderableBuffer* sRenderableBuffer=nullptr;
 void InitRenderableBuffer(HDC dc, int width, int height) {
     sRenderableBuffer = new RenderableBuffer;
@@ -25,4 +26,10 @@ void SetColor(int x, int y, AByte r, AByte g, AByte b, AByte a) {
 }
 void ASwapBuffers(HDC dc) {
 	BitBlt(dc, 0, 0, sRenderableBuffer->mWidth, sRenderableBuffer->mHeight, sRenderableBuffer->mDC, 0, 0, SRCCOPY);
+}
+float randf() {
+    return float(rand()) / float(RAND_MAX);//0.0~1.0
+}
+float srandf() {
+    return randf() * 2.0f - 1.0f;//-1.0~1.0
 }

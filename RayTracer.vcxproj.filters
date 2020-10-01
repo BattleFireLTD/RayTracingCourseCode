@@ -36,6 +36,12 @@
     <ClCompile Include="Sphere.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Object.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="utils.h">
@@ -54,6 +60,12 @@
       <Filter>源文件</Filter>
     </ClInclude>
     <ClInclude Include="Sphere.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.h">
       <Filter>源文件</Filter>
     </ClInclude>
   </ItemGroup>
