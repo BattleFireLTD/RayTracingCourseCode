@@ -25,6 +25,12 @@ float GetEscaptedTime() {
 	sLastFrameTime = sTimeSinceComputerStart;
 	return float(frame_time) / 1000.0f;;
 }
+Vector3 GetEnviromentColor(const Ray& input_ray) {
+	Vector3 bottom_color(1.0f,1.0f,1.0f);
+	Vector3 top_color(0.5f, 0.7f, 1.0f);
+	float factor = 0.5f*input_ray.mDirection.y+0.5f;
+	return factor * top_color + (1.0f - factor) * bottom_color;
+}
 void RenderOnePixel(int pixel_index) {
 	int x = pixel_index % sViewportWidth;
 	int y = pixel_index / sViewportWidth;
@@ -42,12 +48,10 @@ void RenderOnePixel(int pixel_index) {
 		SetColor(x, y, r, g, b, 255);
 	}
 	else {
-		float rf = ray.mDirection.x > 0.0f ? ray.mDirection.x : -ray.mDirection.x;
-		float gf = ray.mDirection.y > 0.0f ? ray.mDirection.y : -ray.mDirection.y;
-		float bf = ray.mDirection.z > 0.0f ? ray.mDirection.z : -ray.mDirection.z;
-		AByte r = AByte(rf * 255.0f);
-		AByte g = AByte(gf * 255.0f);
-		AByte b = AByte(bf * 255.0f);
+		Vector3 color = GetEnviromentColor(ray);
+		AByte r = AByte(color.x * 255.0f);
+		AByte g = AByte(color.y * 255.0f);
+		AByte b = AByte(color.z * 255.0f);
 		SetColor(x, y, r, g, b, 255);
 	}
 }
