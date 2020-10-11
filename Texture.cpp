@@ -1,5 +1,11 @@
 #include"Texture.h"
 #include"utils.h"
+TextureSolidColor::TextureSolidColor(const Vector3& color) {
+	mSolidColor = color;
+}
+Vector3 TextureSolidColor::Sample(float u, float v) {
+	return mSolidColor;
+}
 TextureRGB::TextureRGB() {
 	mImageFileContent = nullptr;
 	mRGBPixel = nullptr;

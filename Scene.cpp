@@ -32,14 +32,17 @@ void Init(int width, int height) {
 	sViewportHeight = height;
 	sCamera=new Camera(45.0f,float(width)/float(height));
 	sCamera->LookAt(Vector3(3.0f,1.0f,3.0f),Vector3(0.0f,0.0f,0.0f),Vector3(0.0f,1.0f,0.0f));
-	lambert = new LambertMaterial(Vector3(0.1f, 0.4f, 0.7f));
-	Material* earth_material = new LambertMaterial(Vector3(0.5f,0.3f,0.1f));
-	Material* metal_material = new MetalMaterial(Vector3(0.9f,0.9f,0.9f));
+	Texture2D* solid_color1 = new TextureSolidColor(Vector3(0.1f, 0.4f, 0.7f));
+	Texture2D* solid_color2 = new TextureSolidColor(Vector3(0.5f, 0.3f, 0.1f));
+	Texture2D* solid_color3 = new TextureSolidColor(Vector3(0.5f, 0.3f, 0.1f));
+	TextureRGB* rgb = new TextureRGB;
+	rgb->Set("earth.bmp");
+	lambert = new LambertMaterial(rgb);
+	Material* earth_material = new LambertMaterial(solid_color2);
+	Material* metal_material = new MetalMaterial(solid_color3);
 	AddObject(new Object(new Sphere(Vector3(0.0f,-1000.0f,0.0f),1000.0f),earth_material));
 	AddObject(new Object(&sphere, lambert));
 	AddObject(new Object(new Sphere(Vector3(-1.0f,0.5f, 0.3f), 0.5f), metal_material));
-	TextureRGB* rgb = new TextureRGB;
-	rgb->Set("earth.bmp");
 }
 float GetEscaptedTime() {
 	static unsigned long sTimeSinceComputerStart = 0;

@@ -37,6 +37,7 @@ class Material;
 struct HitPoint {
 	Vector3 mPosition;
 	Vector3 mNormal;
+	float mU, mV;
 	float mDistance;
 	Material* mMaterial;
 };
