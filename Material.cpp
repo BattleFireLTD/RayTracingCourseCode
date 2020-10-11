@@ -7,3 +7,8 @@ bool LambertMaterial::Scatter(const Ray& input_ray, const HitPoint& hit_point, R
 	out_ray.Set(hit_point.mPosition, new_direction, input_ray.mLightAttenuation*mDiffuse);
 	return true;
 }
+bool MetalMaterial::Scatter(const Ray& input_ray, const HitPoint& hit_point, Ray& out_ray) {
+	Vector3 new_direction = Reflect(input_ray.mDirection,hit_point.mNormal);
+	out_ray.Set(hit_point.mPosition, new_direction, input_ray.mLightAttenuation * mDiffuse);
+	return true;
+}

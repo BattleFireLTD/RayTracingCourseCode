@@ -32,6 +32,7 @@ public:
 Vector3 operator*(float f, const Vector3& v);
 float Dot(const Vector3& l, const Vector3& r);
 Vector3 Cross(const Vector3& l, const Vector3& r);
+Vector3 Reflect(const Vector3& v, const Vector3& n);
 class Material;
 struct HitPoint {
 	Vector3 mPosition;

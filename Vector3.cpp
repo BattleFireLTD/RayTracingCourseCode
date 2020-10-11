@@ -46,6 +46,9 @@ float Dot(const Vector3& l, const Vector3& r) {
 Vector3 Cross(const Vector3& l, const Vector3& r) {
 	return Vector3(l.y*r.z-l.z*r.y,l.z*r.x-l.x*r.z,l.x*r.y-l.y*r.x);
 }
+Vector3 Reflect(const Vector3& v, const Vector3& n) {
+	return v - 2.0f * (Dot(v, n) * n);
+}
 Vector3 UnitRandomVector3InSphere() {
 	Vector3 random_vector(srandf(),srandf(),srandf());
 	random_vector.Normalize();
