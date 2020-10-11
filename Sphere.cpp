@@ -19,19 +19,19 @@ bool Sphere::HitTest(const Ray& input_ray, float min_distance, float max_distanc
 	bool isHited = false;
 	float distance = -1.0f;
 	if (determinant > 0.0f) {
-		distance = (-b - sqrtf(determinant))/ 2.0f;
+		distance = (-b - sqrtf(determinant))/ (2.0f * a);
 		if (distance > min_distance && distance < max_distance) {
 			isHited = true;
 		}
 		else {
-			distance = (-b + sqrtf(determinant)) / 2.0f;
+			distance = (-b + sqrtf(determinant)) / (2.0f * a);
 			if (distance > min_distance && distance < max_distance) {
 				isHited = true;
 			}
 		}
 	}
 	else if (determinant == 0.0f) {
-		distance = -b / 2.0f;
+		distance = -b / (2.0f * a);
 		if (distance > min_distance && distance < max_distance) {
 			isHited = true;
 		}

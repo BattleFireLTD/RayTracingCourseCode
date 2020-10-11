@@ -11,16 +11,18 @@
 static int sTotalPixelCount = 0;
 static int sViewportWidth = 0, sViewportHeight = 0;
 static Camera* sCamera = nullptr;
-Sphere sphere(Vector3(0.0f,0.0f,-5.0f),0.5f);
+Sphere sphere(Vector3(0.0f,0.5f,0.0f),0.5f);
 static Object* sRootObject = nullptr;
 static Material* lambert = nullptr;
-static int sSampleCount = 1;
+static int sSampleCount = 16;
+static int sMaxBounceTime = 30;
 void AddObject(Object* object) {
 	if (sRootObject == nullptr) {
 		sRootObject = object;
 	}
 	else {
 		//link to linked list
+		sRootObject->Append(object);
 	}
 }
 void Init(int width, int height) {
@@ -28,8 +30,10 @@ void Init(int width, int height) {
 	sViewportWidth = width;
 	sViewportHeight = height;
 	sCamera=new Camera(45.0f,float(width)/float(height));
-	sCamera->LookAt(Vector3(0.0f,0.0f,0.0f),Vector3(0.0f,0.0f,-1.0f),Vector3(0.0f,1.0f,0.0f));
+	sCamera->LookAt(Vector3(3.0f,1.0f,3.0f),Vector3(0.0f,0.0f,0.0f),Vector3(0.0f,1.0f,0.0f));
 	lambert = new LambertMaterial(Vector3(0.1f, 0.4f, 0.7f));
+	Material* earth_material = new LambertMaterial(Vector3(0.5f,0.3f,0.1f));
+	AddObject(new Object(new Sphere(Vector3(0.0f,-1000.0f,0.0f),1000.0f),earth_material));
 	AddObject(new Object(&sphere, lambert));
 }
 float GetEscaptedTime() {
@@ -46,15 +50,28 @@ Vector3 GetEnviromentColor(const Ray& input_ray) {
 	float factor = 0.5f*input_ray.mDirection.y+0.5f;
 	return factor * top_color + (1.0f - factor) * bottom_color;
 }
-Vector3 GetColor(Ray& input_ray) {
+Vector3 RenderOneSample(Ray& input_ray,int bounce_time) {
 	HitPoint hit_point;
-	if (sRootObject->HitTest(input_ray, 0.01f, 100.0f, hit_point)) {
-		Ray scatter_ray;
-		if (hit_point.mMaterial->Scatter(input_ray, hit_point, scatter_ray)) { 
-			return GetColor(scatter_ray); 
-		} 
-	} 
-	return GetEnviromentColor(input_ray); 
+	float max_distance = 1000.0f;
+	Object* current_object = sRootObject;
+	Object* hitted_object = nullptr;
+	while (current_object != nullptr) {
+		if (current_object->HitTest(input_ray, 0.01f, max_distance, hit_point)) {
+			max_distance = hit_point.mDistance;
+			hitted_object = current_object;
+		}
+		current_object = current_object->Next<Object>();
+	}
+	if (hitted_object != nullptr) {
+		if (bounce_time < sMaxBounceTime) {
+			Ray scatter_ray;
+			if (hit_point.mMaterial->Scatter(input_ray, hit_point, scatter_ray)) {
+				return RenderOneSample(scatter_ray,bounce_time+1);
+			}
+		}
+		return Vector3(0.0f,0.0f,0.0f);
+	}
+	return GetEnviromentColor(input_ray) * input_ray.mLightAttenuation;
 } 
 void RenderOnePixel(int pixel_index) {
 	int x = pixel_index % sViewportWidth;
@@ -66,7 +83,7 @@ void RenderOnePixel(int pixel_index) {
 		float u = (float(x) + offset_u) / sViewportWidth;//0.0~1.0
 		float v = (float(y) + offset_v) / sViewportHeight;//0.0~1.0
 		Ray ray = sCamera->GetRay(u, v);
-		Vector3 current_color = GetColor(ray);
+		Vector3 current_color = RenderOneSample(ray,0);
 		color = color + current_color;
 	}
 	color /= float(sSampleCount);
