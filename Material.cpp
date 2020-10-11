@@ -15,3 +15,6 @@ bool MetalMaterial::Scatter(const Ray& input_ray, const HitPoint& hit_point, Ray
 		input_ray.mLightAttenuation *mDiffuseTexture->Sample(hit_point.mU, hit_point.mV));
 	return true;
 }
+Vector3 LightMaterial::Emmit(const HitPoint& hit_point) {
+	return mIntensity * mDiffuseTexture->Sample(hit_point.mU, hit_point.mV);
+}

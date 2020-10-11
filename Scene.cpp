@@ -31,17 +31,20 @@ void Init(int width, int height) {
 	sViewportWidth = width;
 	sViewportHeight = height;
 	sCamera=new Camera(45.0f,float(width)/float(height));
-	sCamera->LookAt(Vector3(3.0f,1.0f,3.0f),Vector3(0.0f,0.0f,0.0f),Vector3(0.0f,1.0f,0.0f));
+	sCamera->LookAt(Vector3(5.0f,1.0f,5.0f),Vector3(0.0f,0.0f,0.0f),Vector3(0.0f,1.0f,0.0f));
 	Texture2D* solid_color1 = new TextureSolidColor(Vector3(0.1f, 0.4f, 0.7f));
 	Texture2D* solid_color2 = new TextureSolidColor(Vector3(0.5f, 0.3f, 0.1f));
 	Texture2D* solid_color3 = new TextureSolidColor(Vector3(0.5f, 0.3f, 0.1f));
+	Texture2D* whilte_texture = new TextureSolidColor(Vector3(1.0f, 1.0f, 1.0f));
 	TextureRGB* rgb = new TextureRGB;
 	rgb->Set("earth.bmp");
-	lambert = new LambertMaterial(rgb);
 	Material* earth_material = new LambertMaterial(solid_color2);
 	Material* metal_material = new MetalMaterial(solid_color3);
+	LightMaterial* light_material = new LightMaterial(whilte_texture);
+	light_material->mIntensity = 10.0f;
+	AddObject(new Object(new Sphere(Vector3(0.0f, 2.0f, 0.0f), 0.5f), light_material));
 	AddObject(new Object(new Sphere(Vector3(0.0f,-1000.0f,0.0f),1000.0f),earth_material));
-	AddObject(new Object(&sphere, lambert));
+	AddObject(new Object(&sphere, new LambertMaterial(solid_color1)));
 	AddObject(new Object(new Sphere(Vector3(-1.0f,0.5f, 0.3f), 0.5f), metal_material));
 }
 float GetEscaptedTime() {
@@ -53,6 +56,7 @@ float GetEscaptedTime() {
 	return float(frame_time) / 1000.0f;;
 }
 Vector3 GetEnviromentColor(const Ray& input_ray) {
+	return Vector3(0.0f, 0.0f, 0.0f);
 	Vector3 bottom_color(1.0f,1.0f,1.0f);
 	Vector3 top_color(0.5f, 0.7f, 1.0f);
 	float factor = 0.5f*input_ray.mDirection.y+0.5f;
@@ -71,13 +75,15 @@ Vector3 RenderOneSample(Ray& input_ray,int bounce_time) {
 		current_object = current_object->Next<Object>();
 	}
 	if (hitted_object != nullptr) {
+		Vector3 emmited_color = hit_point.mMaterial->Emmit(hit_point);
 		if (bounce_time < sMaxBounceTime) {
 			Ray scatter_ray;
 			if (hit_point.mMaterial->Scatter(input_ray, hit_point, scatter_ray)) {
-				return RenderOneSample(scatter_ray,bounce_time+1);
+				return emmited_color + RenderOneSample(scatter_ray,bounce_time+1);
 			}
+			return emmited_color * input_ray.mLightAttenuation;
 		}
-		return Vector3(0.0f,0.0f,0.0f);
+		return emmited_color * input_ray.mLightAttenuation;
 	}
 	return GetEnviromentColor(input_ray) * input_ray.mLightAttenuation;
 } 
