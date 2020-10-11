@@ -6,6 +6,7 @@
 #include"Material.h"
 #include"Object.h"
 #include"Sphere.h"
+#include"Texture.h"
 #include<Windows.h>
 #pragma comment(lib,"winmm.lib")
 static int sTotalPixelCount = 0;
@@ -37,6 +38,8 @@ void Init(int width, int height) {
 	AddObject(new Object(new Sphere(Vector3(0.0f,-1000.0f,0.0f),1000.0f),earth_material));
 	AddObject(new Object(&sphere, lambert));
 	AddObject(new Object(new Sphere(Vector3(-1.0f,0.5f, 0.3f), 0.5f), metal_material));
+	TextureRGB* rgb = new TextureRGB;
+	rgb->Set("earth.bmp");
 }
 float GetEscaptedTime() {
 	static unsigned long sTimeSinceComputerStart = 0;

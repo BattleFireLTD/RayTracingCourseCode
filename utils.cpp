@@ -33,3 +33,37 @@ float randf() {
 float srandf() {
     return randf() * 2.0f - 1.0f;//-1.0~1.0
 }
+unsigned char* LoadFileContent(const char* path, int& file_size) {
+    FILE* file = fopen(path, "rb");
+    if (file!=nullptr) {
+        fseek(file, 0,SEEK_END);
+        file_size = ftell(file);
+        if (file_size > 0) {
+            rewind(file);
+            unsigned char* content = new unsigned char[file_size+1];
+            fread(content, 1, file_size, file);
+            content[file_size] = 0;
+            fclose(file);
+            return content;
+        }
+        fclose(file);
+    }
+    return nullptr;
+}
+unsigned char* DecodeBMP(unsigned char* bmp_file_content, int& width, int& height) {
+    if (0x4D42 == *((unsigned short*)bmp_file_content)) {
+        int pixel_data_offset = *((int*)(bmp_file_content + 10));
+        width = *((int*)(bmp_file_content + 18));
+        height = *((int*)(bmp_file_content + 22));
+        unsigned char * pixel_data = bmp_file_content + pixel_data_offset;
+        //bgr->rgb
+        for (int i = 0; i < width * height; i++) {
+            int pixel_data_start_index = i * 3;
+            unsigned char r = pixel_data[pixel_data_start_index+2];
+            pixel_data[pixel_data_start_index+2]=pixel_data[pixel_data_start_index];
+            pixel_data[pixel_data_start_index] = r;
+        }
+        return pixel_data;
+    }
+    return nullptr;
+}
